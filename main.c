@@ -10,29 +10,67 @@ int min(int a, int b, int c);
 
 void ft_create_massive(char *argv, int att);
 
-int ft_change(int **temp, int maxi, int maxj, int maxs);
+int **ft_change(int **temp, int maxi, int maxj, int maxs);
 
-void ft_translate(char **mas, char *ch);
+int *ft_strdupint(char *row, int column, int *mas)
 {
-	int 
+	int i;
+	char ch;
 
+	ch = characters_g[1]; 
+
+	i = 0;
+	mas = (int*)malloc(sizeof(int)*column);
+	while (i < column)
+	{
+
+		if (row[i] == ch)
+			mas[i] = 0;
+		else
+			mas[i] = 1;
+		i++;
+	}
+	return(mas);
+}
+
+int **ft_translate(char **mas, int row, int column)
+{
+	int i;
+	int j;
+	int **massiveint;
+
+	i = 0;
+	j = 0;
+	massiveint = (int**)malloc(sizeof(int*) * row);
+	while(i < row)
+	{
+		massiveint[i] = ft_strdupint(mas[i], column, massiveint[i]);
+		i++;
+	}
+	return(massiveint);
+}
 int **find(char **massive, int row, int column) 
 { 
 	int i;
    	int j;	
-	char **temp; 
+	int **temp; 
 	int maxs;
 	int maxi;
 	int maxj;
-	int k;	
- 
-   	ft_tranlate(massive, characters_g);	
+	int **temp2;
+
+	i = 0;
+	j = 0;
+ 	
+	temp2 = ft_translate(massive, row, column);	
+	temp = (int**)malloc(sizeof(int*)*row);
 	while (i < row)
 	{
+		temp[i] = (int*)malloc(sizeof(int)*column);
 		j = 0;
 		while (j < column)
 		{
-			temp[i][j] = massive[i][j];
+			temp[i][j] = temp2[i][j];
 			j++;
 		}
 		i++;
@@ -53,13 +91,13 @@ int **find(char **massive, int row, int column)
 	i = 0;
 	while(i == 0)
 	{
-		temp[i][0] = massive[i][0];
+		temp[i][0] = temp2[i][0];
 		i++;
 	}
 	j = 0;
 	while(j < column)
 	{
-		temp[0][j] = massive[0][j];
+		temp[0][j] = temp2[0][j];
 		j++;
 	}
 	i = 1;
@@ -68,7 +106,7 @@ int **find(char **massive, int row, int column)
 		j = 1;
 		while (j < column) 
    		{
-			if(massive[i][j] == 1)
+			if(temp2[i][j] == 1)
 				temp[i][j] = min(temp[i][j-1], temp[i-1][j], temp[i-1][j-1]) + 1;
 			else
 				temp[i][j] = 0;
@@ -108,6 +146,7 @@ int **find(char **massive, int row, int column)
 		i++;
 	}
 	printf("%d %d %d\n", maxs, maxi, maxj);
+	i = 0;
 	while (i < row)
 	{
 		j = 0;
@@ -124,18 +163,18 @@ int **find(char **massive, int row, int column)
 	return (temp);
 }
 
-int ft_change(int **temp, int maxi, int maxj, int maxs)
+int **ft_change(int **temp, int maxi, int maxj, int maxs)
 {
 	int i;
 	int j;
-	char buff;
 	int row;
 	int column;
 
 	i = 0;
 	j = 0;
-	column = maxs;
-	printf("%d colomn\n", column);
+	row = maxj;
+	column = maxi;
+	printf("%d colomn a\n", column);
 	printf("%d maxs\n", maxs);
 	printf("%d\n", temp[maxi][maxj]);
    	while (i < maxs)
@@ -143,7 +182,7 @@ int ft_change(int **temp, int maxi, int maxj, int maxs)
 		while(j < maxs)
 		{
 			temp[maxi][maxj] = -1;
-			printf("%d\n", temp[maxj][maxi]); 
+			printf("%d shit\n", temp[maxj][maxi]); 
 			maxi--;
 			j++;
 		}
@@ -223,6 +262,8 @@ void ft_defining(char *buff, int j)
 	int rows;
 
 	i = 0;
+	characters = malloc(sizeof(char)*3);
+
 	write(1, &i, 1);
 	while (i < 3)
 	{
@@ -234,9 +275,7 @@ void ft_defining(char *buff, int j)
 	printf("%s characters\n", characters);
 	printf("%s left shit\n", buff);
 	rows = ft_atoi(buff);
-	characters[0] = '2';
-	characters[1] = '0';
-	characters[2] = '1';
+
 	characters_g = malloc(sizeof(char)*3);
 	i = 0;
 	while (i < 3)
@@ -248,14 +287,14 @@ void ft_defining(char *buff, int j)
 
 	 
 
-char *ft_read(char *argv, int i)
+char *ft_read(char *argv)
 {
-	char buff[14];
+	char *buff;
 	int file;
 	int j;
 	char c;
-	char *temp;
 	
+	buff = (char*)malloc(sizeof(char)*14);
 	j = 0;
 	if ((file = open(argv, O_RDONLY)) > 0)
 	{
@@ -272,11 +311,10 @@ char *ft_read(char *argv, int i)
 	return(buff);
 }
 
-char *proccesfirtsstring(char *argv, int i)
+char *proccesfirtsstring(char *argv)
 {
-	int j;
 	char *len;
-	len = ft_read(argv, i);
+	len = ft_read(argv);
 	return(len);
 }
 
@@ -336,7 +374,7 @@ void	ft_massive(int att, char buff[3000])
 		j++;
 	}
 	i = len/att;
-	ft_find(massive, att, i);
+	find(massive, att, i);
 }
 
 
@@ -347,7 +385,8 @@ void ft_create_massive(char *argv, int att)
 	char c;
 	int j;
 	int k;
-
+	
+	j = 0;
 	k = 0;
 	printf("%d check\n", att);
 	if((file = open(argv, O_RDONLY)) > 0)
@@ -372,19 +411,16 @@ void ft_create_massive(char *argv, int att)
 
 int main(int argc, char **argv) 
 {
-   	int file;
 	char *attributes;
 	int attrib;
-	char **mas;
 	int i;
-	int j;
 
 	i = 1;
 	while (i < argc)
 	{
 		if(i < argc)
 		{
-			attributes = proccesfirtsstring(argv[i], i);
+			attributes = proccesfirtsstring(argv[i]);
 			printf("%s\n",attributes);
 			attrib = ft_atoi(attributes); // тут считывание пошло не по плану:( поэтому снова атои
 			printf("%s\n",characters_g);
