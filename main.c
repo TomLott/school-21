@@ -8,7 +8,7 @@ char **massive;
 
 int min(int a, int b, int c);
 
-void ft_create_massive(char *argv, int att);
+int ft_create_massive(char *argv, int att);
 
 int **ft_change(int **temp, int maxi, int maxj, int maxs);
 
@@ -272,6 +272,23 @@ int ft_strlen(char *buff)
 		i++;
 	return(i);
 }
+int ft_charact_check(char *row, char *charact)
+{
+	int i;
+	
+	i = 0;
+	while(*row)
+	{
+		if (row[0] == '0' || !(row[0] >= '1' && row[0] <= '9'))
+			return(0);
+		if (!(row[i] >= '0' && row[i] <= '9'))
+			return (0);
+		i++;
+	}
+	return(1);
+}
+
+
 void ft_defining(char *buff, int j)
 {
 	int i;
@@ -282,6 +299,7 @@ void ft_defining(char *buff, int j)
 	characters = malloc(sizeof(char)*3);
 
 	write(1, &i, 1);
+	write(1, "shit", 4);
 	while (i < 3)
 	{
 		characters[i] = buff[j-1];
@@ -426,7 +444,33 @@ char *ft_read_file(char *argv)
 	return (temp);
 }
 
-void ft_create_massive(char *argv, int att)
+int ft_valid(char *temp)
+{
+	int i;
+	int max;
+	int len;
+
+	i = 0;
+	max = 0;
+	len = 0;
+	if(temp[0] == '\0' || temp[0] == '\n')
+		return(0);
+	while(temp[len + i]!= '\0')
+	{
+		while(temp[len + i] != '\n')
+			i++;
+		if (max == 0)
+			max = i;
+		else 
+			if (i != max)
+				return(0);
+		len = len + i + 1;
+		i = 0;
+	}
+	return (1);
+}
+
+int ft_create_massive(char *argv, int att)
 {
 	char buff[65534];
 	int file;
@@ -446,9 +490,12 @@ void ft_create_massive(char *argv, int att)
 		}
 		temp = ft_read_file(argv);
 		printf("%s result\n", temp);
+		if (ft_valid(temp) == 0)
+			return(0);
 		ft_massive(att, temp);
 		close(file);
 	}
+	return (1);
 }
 
 int main(int argc, char **argv) 
@@ -464,7 +511,8 @@ int main(int argc, char **argv)
 		{
 			attributes = proccesfirtsstring(argv[i]);
 			printf("%s\n",attributes);
-			attrib = ft_atoi(attributes); // тут считывание пошло не по плану:( поэтому снова атои
+			if((attrib = ft_atoi(attributes) == 0))
+				   return (0);	// тут считывание пошло не по плану:( поэтому снова атои
 			printf("%s\n",characters_g);
 			printf("%d final result1\n",attrib); // тут уже INT
 		}
@@ -472,4 +520,5 @@ int main(int argc, char **argv)
 			ft_create_massive(argv[i], attrib);
 		i++;
 	}
+	return (0); 
 }	
