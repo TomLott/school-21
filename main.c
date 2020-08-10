@@ -215,22 +215,11 @@ int **ft_change(int **temp, int maxi, int maxj, int maxs)
 			j++;
 		}
 		j = 0;
-		maxj += column + 1;
+		maxj += maxs;
 		maxi--;
 		i++;
 	}
 	i = 0;
-	while (i < 9)
-	{
-		j = 0;
-		while(j < 28)
-		{
-			printf("%d ", temp[i][j]);
-			j++;
-		}
-		printf("\n");
-		i++;
-	}
 	return (temp);
 }
 
@@ -335,6 +324,7 @@ char *ft_read(char *argv)
 		printf("%d\n", j);
 		printf("%s oh shit! here we go again\n", buff);
 		ft_defining(buff, j);
+		close(file);
 	}
 	return(buff);
 }
@@ -378,7 +368,7 @@ char	*ft_strdup(char *src, int k)
 	return (tab);
 }
 
-void	ft_massive(int att, char buff[3000])
+void	ft_massive(int att, char buff[65534])
 {
 	int i;
 	int j;
@@ -405,35 +395,59 @@ void	ft_massive(int att, char buff[3000])
 	find(massive, att, i);
 }
 
+char *ft_read_file(char *argv)
+{
+	int file;
+	int i;
+	char c;
+	char *temp;
+
+	i = 0;
+	if ((file = open(argv, O_RDONLY))> 0)
+	{
+		while(read(file, &c, 1) > 0 && c != '\n')
+			i = 0;
+		while(read(file, &c, 1) > 0)
+			i++;
+		printf("%d all of \n", i);
+	}
+	temp = (char*)malloc(sizeof(char)*i+1);
+	if ((file = open(argv, O_RDONLY))> 0)
+	{
+		while(read(file, &c, 1) > 0 && c != '\n')
+			i = 0;
+		while(read(file, &c, 1) > 0)
+		{	
+			temp[i] = c;
+			i++;
+		}
+		printf("%d all of \n", i);
+	}
+	return (temp);
+}
 
 void ft_create_massive(char *argv, int att)
 {
-	char buff[3000];
+	char buff[65534];
 	int file;
 	char c;
 	int j;
-	int k;
+	char *temp;
 	
 	j = 0;
-	k = 0;
 	printf("%d check\n", att);
 	if((file = open(argv, O_RDONLY)) > 0)
-	{
+	{	
+		printf("%d amount\n", file);
 		while(read(file, &c, 1) > 0 && c != '\n')
 		{
 			write(1, &c, 1);
 			j++;
 		}
-		write(1, "\n", 1);
-		j = 0;
-		while (j < att - 1)
-		{
-			while(read(file, &buff,3000) > 0)
-			{
-				ft_massive(att, buff);
-			}
-			j++;
-		}
+		temp = ft_read_file(argv);
+		printf("%s result\n", temp);
+		ft_massive(att, temp);
+		close(file);
 	}
 }
 
