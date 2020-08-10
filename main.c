@@ -12,6 +12,8 @@ void ft_create_massive(char *argv, int att);
 
 int **ft_change(int **temp, int maxi, int maxj, int maxs);
 
+void ft_print(int **temp, int row, int column);
+
 int *ft_strdupint(char *row, int column, int *mas)
 {
 	int i;
@@ -160,8 +162,35 @@ int **find(char **massive, int row, int column)
 	}
 	printf("%d\n", temp[maxi][maxj]);
 	ft_change(temp, maxi, maxj, maxs);
+	ft_print(temp, row, column);
 	return (temp);
 }
+
+void ft_print(int **temp, int row, int column)
+{
+	int i;
+	int j;
+	
+	i = 0;
+	j = 0;
+	while(i < row)
+	{
+		while(j < column)
+		{
+			if (temp[i][j] == 0)
+				write(1, &characters_g[1], 1);
+			else if(temp[i][j] == -1)
+				write(1, &characters_g[0], 1);
+			else
+				write(1, &characters_g[2], 1);
+			j++;
+		}
+		j = 0;
+		write(1, "\n", 1);
+		i++;
+	}
+}
+
 
 int **ft_change(int **temp, int maxi, int maxj, int maxs)
 {
@@ -176,26 +205,25 @@ int **ft_change(int **temp, int maxi, int maxj, int maxs)
 	column = maxi;
 	printf("%d colomn a\n", column);
 	printf("%d maxs\n", maxs);
-	printf("%d\n", temp[maxi][maxj]);
+	printf("%d last\n", temp[maxi][maxj]);
    	while (i < maxs)
 	{
 		while(j < maxs)
 		{
 			temp[maxi][maxj] = -1;
-			printf("%d shit\n", temp[maxj][maxi]); 
-			maxi--;
+			maxj--;
 			j++;
 		}
 		j = 0;
-		maxi += column;
-		maxj--;
+		maxj += column + 1;
+		maxi--;
 		i++;
 	}
 	i = 0;
-	while (i < row)
+	while (i < 9)
 	{
 		j = 0;
-		while(j < column)
+		while(j < 28)
 		{
 			printf("%d ", temp[i][j]);
 			j++;
@@ -211,7 +239,7 @@ int min(int a, int b, int c)
 	int m = a;
 	if (m > b)
 		m = b; 
-	if (m > c)
+	else if (m > c)
 		m = c; 
 	return m; 
 }
