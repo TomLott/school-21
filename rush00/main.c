@@ -20,11 +20,12 @@ void	ft_free(char *str1, char **str2, int att)
 
 	i = 0;
 	free(str1);
-	while (i < att)
-	{
-		free(str2[i]);
-		i++;
-	}
+	if (att > 1)
+		while (i < att)
+		{
+			free(str2[i]);
+			i++;
+		}
 	free(str2);
 }
 
@@ -77,9 +78,10 @@ void	ft_print(int **temp, int row, int column)
 		j = -1;
 		write(1, "\n", 1);
 	}
-	i = 0;
-	while (i++ < row)
-		free(temp[i]);
+	i = -1;
+	if (row > 1)
+		while (++i < row)
+			free(temp[i]);
 	free(temp);
 	free(g_characters);
 }
