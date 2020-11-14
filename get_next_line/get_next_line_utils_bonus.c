@@ -6,11 +6,11 @@
 /*   By: itollett <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/08 17:18:49 by itollett          #+#    #+#             */
-/*   Updated: 2020/11/12 19:42:09 by itollett         ###   ########.fr       */
+/*   Updated: 2020/11/12 20:05:43 by itollett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 size_t	ft_strlen(const char *string)
 {

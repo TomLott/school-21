@@ -6,11 +6,11 @@
 /*   By: itollett <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/08 17:08:51 by itollett          #+#    #+#             */
-/*   Updated: 2020/11/12 20:05:15 by itollett         ###   ########.fr       */
+/*   Updated: 2020/11/12 20:05:07 by itollett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 int				ft_finish(char **line, char **leftover)
 {

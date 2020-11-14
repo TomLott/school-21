@@ -6,12 +6,12 @@
 /*   By: itollett <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/08 17:20:40 by itollett          #+#    #+#             */
-/*   Updated: 2020/11/12 19:43:38 by itollett         ###   ########.fr       */
+/*   Updated: 2020/11/12 20:07:21 by itollett         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 # include <fcntl.h>
 # include <stdlib.h>
 # include <string.h>
