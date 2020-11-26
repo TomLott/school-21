@@ -1,0 +1,33 @@
+NAME = libftprintf.a
+
+CC = gcc
+
+CFLAGC = -Wall -Werror -Wextra -I. -c
+
+SRC = flags.c \
+	  ft_print_int.c \
+	  ft_print_c.c \
+	  ft_print_u.c \
+	  ft_print_x.c \
+	  ft_printf.c \
+	  ft_print_p.c \
+	  ft_reader1.c \
+	  different_functions.c \
+	  ft_nums_printer.c \
+
+OBJ = $(SRC:.c=.o)
+
+all: $(NAME)
+
+$(NAME):	$(OBJ)
+		ar rc $(NAME) $(OBJ)
+		ranlib $(NAME)
+
+clean:
+	rm -f *.o
+fclean: clean
+	rm -f $(NAME)
+
+re: fclean all
+
+.PHONY: clean fclean all re
