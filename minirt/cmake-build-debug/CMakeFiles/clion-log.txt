@@ -1,0 +1,9 @@
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /Users/itollett/minirt
+CMake Error in CMakeLists.txt:
+  Unexpected end of file.
+
+  Parse error.  Function missing opening "(".
+
+
+-- Configuring incomplete, errors occurred!
+See also "/Users/itollett/minirt/cmake-build-debug/CMakeFiles/CMakeOutput.log".
