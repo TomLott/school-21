@@ -27,8 +27,9 @@ int line_parse(char *line, t_all *all)
 	int i;
 
 	i = 0;
+
 	ft_isspace(line, &i);
-	if (line[i] == '1' || all->err.x == 1)
+	if (line[i] == '1' || all->err.n == 1)
 		all->err.x = ft_map(all, line, &i);
 	else if (line[i] == 'R')
 		all->err.x = ft_resol(all, line, &i);
@@ -49,6 +50,7 @@ int line_parse(char *line, t_all *all)
 	ft_isspace(line, &i);
 	if (all->err.x == 0 && line[i])
 		all->err.x = -7;
+	i = 0;
 	return (all->err.x < 0) ? ft_errormessage(all->err.x) : 0;
 }
 
@@ -64,7 +66,6 @@ int	ft_parse(char *arg, t_all *all)
 		write(2, "Error: Can't open file.", 23);
 		return (-1);
 	}
-	write(1, "2\n", 2);
 	while ((i = get_next_line(fd, &line)) > 0)
 	{
 		if (line_parse(line, all) < 0)
@@ -72,5 +73,7 @@ int	ft_parse(char *arg, t_all *all)
 		free(line);
 	}
 	close(fd);
+	if ((all->err.x = ft_check_map(all)) == -2)
+		return (ft_errormessage(-2));
 	return (0);
 }

@@ -27,6 +27,19 @@ int	ft_isspace(char *line, int *i)
 	return (1);
 }
 
+void ft_free(char **s)
+{
+	int i;
+
+	i = 0;
+	while(s[i])
+	{
+		free(s[i]);
+		i++;
+	}
+	free(s);
+}
+
 int ft_errormessage(int i)
 {
 	(i == -1) ? write(2, "Error: Can't allocate memory (malloc error)\n", 44) : 1;
@@ -37,4 +50,22 @@ int ft_errormessage(int i)
 	(i == -6) ? write(2, "Error: Invalid colour\n", 22) : 1;
 	(i == -7) ? write(2, "Error: extra line/symbols in file\n", 34) : 1;
  	return (-1);
+}
+
+int		ft_stringlen(t_all *all, char *line)
+{
+	int i;
+
+	i = 0;
+	while(*line)
+	{
+		if (*line == '0' || *line == '1' || *line == '2'
+			|| *line == 'N' || *line == 'S' || *line == 'W'
+			|| *line == 'E')
+			i++;
+		line++;
+	}
+	if (all->map.x && all->map.x != i)
+		return (-1);
+	return (i);
 }

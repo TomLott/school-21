@@ -71,7 +71,6 @@ int ft_texture(t_all *all, char *line, int *i, unsigned int **x)
 {
 	int k;
 	char *filename;
-
 	(*i) = (*i) + 2;
 	ft_isspace(line, i);
 	k = (*i);
