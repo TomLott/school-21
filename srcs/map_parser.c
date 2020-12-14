@@ -1,86 +1,106 @@
 #include "../includes/cub.h"
 
-int		ft_stringlen(t_all *all, char *line)
+int zero_check(char **table, int i, int j)
 {
-	int i;
-
-	i = 0;
-	while(*line)
-	{
-		if (*line == '0' || *line == '1' || *line == '2'
-		|| *line == 'N' || *line == 'S' || *line == 'N'
-		|| *line == 'E')
-			i++;
-		line++;
-	}
-	if (all->map->x && all->map->x != i)
-		return (-1);
-	return (i);
+	if (i < 0 || j < 0)
+		return (0);
+	if (j + 2 > (int)ft_strlen(table[i - 1]) || j + 2 > (int)ft_strlen(table[i + 1]))
+		return (0);
+	if (!(table[i - 1][j] == '0' || table[i - 1][j] == '2'
+			   || table[i - 1][j] == '1' || table[i - 1][j] == OK
+			   || table[i - 1][j] == OK + 1 || table[i - 1][j] == 'W'
+			   || table[i - 1][j] == 'S' || table[i - 1][j] == 'N' || table[i - 1][j] == 'E'))
+		return (0);
+	return (1);
 }
 
-char *ft_map_making(char *line, t_all *all, int *i)
+int map_ok(int i, int j, t_all *a)
 {
-	char *temp;
+	if (a->map.table[i][j] != '1' && a->map.table[i][j] != OK
+		&& a->map.table[i][j] != OK + 1)
+	{
+		if (zero_check(a->map.table, i, j) == 0)
+			return (0);
+		if (a->map.table[i][j] == '0')
+			a->map.table[i][j] = OK;
+		if (a->map.table[i][j] == '2')
+			a->map.table[i][j] = OK + 1;
+		if (!map_ok(i - 1, j, a) || !map_ok(i + 1, j, a)
+		|| !map_ok(i, j - 1, a) || !map_ok(i, j + 1, a))
+			return (0);
+	}
+	return (1);
+}
+
+int ft_check_map(t_all *all)
+{
+	int i;
 	int j;
 
-	j = 0;
-	if (!(temp = malloc(sizeof(char) * (ft_stringlen(all, line) + 1))))
-		return (NULL);
-	while (line[*i])
-	{
-		if ((line[*i] == '0' || line[*i] == '1' || line[*i] == 'N'
-		|| line[*i] == 'E' || line[*i] == 'S' || line[*i] == 'W'))
-			temp[j++] = line[*i];
-		else if (line[*i] != ' ')
-		{
-			free(temp);
-			return (NULL);
-		}
-		else if (line[*i] != ' ')
-		{
-			temp[j++] = line[*i];
-			all->map->sprite++;
-		}
-		(*i)++;
-	}
-	temp[j] = '\0';
-	return (temp);
-}
-void ft_free(char **s)
-{
-	int i;
-
 	i = 0;
-	while(*s[i])
+	while(all->map.table[i])
 	{
-		free(s[i]);
+		j = 0;
+		while(all->map.table[i][j])
+		{
+			if (all->map.table[i][j] == '0')
+			{
+				if (!map_ok(i, j, all))
+					return (-2); //map error;
+			}
+			j++;
+		}
 		i++;
 	}
-	free(s);
+	all->map.y = i;
+	return (0);
 }
 
-int	ft_map(t_all *all, char *line, int *i)
+void ft_mapping(t_all *all, t_list **head)
 {
-	char **map;
-	int j;
+	t_list *temp;
+	int i;
 
-	j = 0;
-	all->err->x = 0;
-	write(1, "map\n", 4);
-	if (!(map = (char **)malloc(sizeof(char *) * (all->map->y + 2))))
-		return (-1);
-	while(j++ < all->map->y)
-		map[j - 1] =all->map->table[j - 1];
-	if (!(map[all->map->y] = ft_map_making(line, all, i)))
+	i = 0;
+	temp = *head;
+	all->map.table = (char **)malloc(sizeof(char *) * (all->map.counter + 1));
+	while ((i++ < all->map.line_num) && temp)
+		temp = temp->next;
+	i = 0;
+	while (temp)
 	{
-		ft_free(map);
-		return (-2);
+		all->map.table[i++] = ft_strdup(temp->content);
+		temp = temp->next;
 	}
-	map[all->map->y + 1] = NULL;
-	if (all->map->y++ > 0)
-		free(all->map->table);
-	all->map->table = map;
-	if ((all->map->x = ft_stringlen(all, line)) == -1)
-		return (-3);
-	return (1);
+	all->map.table[i] = NULL;
+	ft_checking_each(all->map.table, all);
+}
+
+void ft_purgatorium(t_all *all, t_list **head)
+{
+	t_list *temp;
+	char *cont;
+
+	temp = *head;
+	all->map.counter = 0;
+	all->map.line_num = 0;
+	while (temp)
+	{
+		cont = temp->content;
+		if ((cont[0] != '1' && cont[0] != '0'
+			 && cont[0] != ' ') && ++all->map.line_num)
+			line_parse(cont, all);
+		else
+		{
+			while (temp)
+			{
+				temp = temp->next;
+				all->map.counter++;
+			}
+			free(cont);
+			break ;
+		}
+		temp = temp->next;
+	}
+	ft_mapping(all, head);
 }
