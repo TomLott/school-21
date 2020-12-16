@@ -30,80 +30,85 @@ void ft_scale_img(t_win *win, t_point point, int colour)
 	}
 }
 
+void ft_move(t_all *all, int i)
+{
+	int n;
+
+	n = (i == 'W' || i == 'D') ? 1 : -1;
+	all->pl.x -= n * all->pl.dir_y * MOVESPEED;
+	if (all->map.table[(int)(all->pl.x)][(int)(all->pl.y)] == '1')
+		all->pl.x += n * all->pl.dir_y * MOVESPEED;
+	all->pl.y += n * all->pl.dir_x * MOVESPEED;
+	if (all->map.table[(int)(all->pl.x)][(int)(all->pl.y)] == '1')
+		all->pl.y += n * all->pl.dir_x * MOVESPEED;
+	if (all->map.table[(int)(all->pl.x)][(int)(all->pl.y)] == '2')
+	{
+		all->map.table[(int)(all->pl.x)][(int)(all->pl.x)] = '0';
+		all->map.sprite--;
+	}
+}
+
+
 int key_press(int key, t_all *all)
 {
+	int hyp;
+
 	mlx_clear_window(all->win.mlx_ptr, all->win.win);
-	printf("%f %f key_pres\n", all->pl.y, all->pl.x);
+	printf("%f %f key_pres\n", all->pl.x, all->pl.y);
+	printf("%f %f key_pres rot\n", all->pl.dir_x, all->pl.dir_y);
+
+	/*if (key == 13)
+	{
+		if ((all->map.table[(int)(all->cam.posX + all->pl.dir_x * MOVESPEED)]
+		[(int)(all->cam.posY)]) != '1')
+			all->pl.x += (all->pl.dir_x * MOVESPEED);
+		if ((all->map.table[(int)(all->cam.posX)]
+		[(int)(all->cam.posY + all->pl.dir_y * MOVESPEED)]) != '1')
+			all->pl.y += all->pl.dir_y * MOVESPEED;
+	}
+	else if (key == 1)
+	{
+		if (!(all->map.table[(int)(all->cam.posX - all->pl.dir_x * MOVESPEED)]
+		[(int)(all->cam.posY)]))
+			all->pl.x -= all->pl.dir_x * MOVESPEED;
+		if (!(all->map.table[(int)(all->cam.posX)]
+		[(int)(all->cam.posY - all->pl.dir_y * MOVESPEED)]))
+			all->pl.y -= all->pl.dir_y * MOVESPEED;*/
 	if (key == 13)
-	{
-		all->pl.y -= 1;
-	} else if (key == 1)
-	{
-		all->pl.y += 1;
-	} else if (key == 0)
-		all->pl.x -= 1;
+		ft_move(all, 'W');
+	else if (key == 0)
+		ft_move(all, 'A');
+	else if (key == 1)
+		ft_move(all, 'S');
 	else if (key == 2)
-		all->pl.x += 1;
+		ft_move(all, 'D');
 	else if (key == 53)
 		exit(0);
 	else if (key == 123)
 	{
-		all->pl.dir_x -= 0.05;
-		all->pl.dir_y += 0.05;
-	} else if (key == 124)
+		all->pl.dir_x = all->pl.dir_x * cos(TURNANGLE)
+				- all->pl.dir_y * sin(TURNANGLE);
+		all->pl.dir_y = all->pl.dir_y * cos(TURNANGLE)
+				+ all->pl.dir_x * sin(TURNANGLE);
+		hyp = hypot(all->pl.dir_x, all->pl.dir_y);
+		all->pl.dir_x /= hyp;
+		all->pl.dir_y /= hyp;
+		printf("%f %f key_pres 123\n", all->pl.dir_x, all->pl.dir_y);
+	}
+	else if (key == 124)
 	{
-		all->pl.dir_y -= 0.05;
-		all->pl.dir_x += 0.05;
+		all->pl.dir_x = all->pl.dir_x * cos(-TURNANGLE)
+				- all->pl.dir_y * sin(-TURNANGLE);
+		all->pl.dir_y = all->pl.dir_y * cos(-TURNANGLE)
+				+ all->pl.dir_x * sin(-TURNANGLE);
+		hyp = hypot(all->pl.dir_x, all->pl.dir_y);
+		all->pl.dir_x /= hyp;
+		all->pl.dir_y /= hyp;
+		printf("%f %f key_pres 124\n", all->pl.dir_x, all->pl.dir_y);
 	}
 	ft_screen(all);
 	return (1);
 }
-/*
-void ft_player_draw(t_all *all, t_point point)
-{
-	float c;
-	float x;
-	float y;
-	int k;
-	int l;
-
-	c = 0;
-	printf("%f %f player\n", all->pl.y, all->pl.x);
-	while (c < 100)
-	{
-		x = all->pl.x + c * cos(all->pl.dir);
-		y = all->pl.y + c * sin(all->pl.dir);
-		k = (int)x/SCALE;
-		l = (int)y/SCALE;
-		if (all->map.table[k/SCALE][l/SCALE] != ' ')
-			break ;
-		point.x = x;
-		point.y = y;
-		mlx_pixel_put(all->win.mlx_ptr, all->win.win, point.x, point.y, 0x0FFFFF);
-		c++;
-	//	size_t pix_x = x * 100;
-		//size_t pix_y = y * 100;
-	}
-}*/
-/*
-void ft_draw_screen(t_all *all)
-{
-	t_point point;
-
-	ft_bzero(&point, sizeof(t_point));
-	while (all->map.table[point.y])
-	{
-		point.x = 0;
-		while (all->map.table[point.y][point.x])
-		{
-			if (all->map.table[point.y][point.x] == '1')
-				ft_scale_img(&all->win, point, 0xFFFFFF);
-			point.x++;
-		}
-		point.y++;
-	}
-	ft_player_draw(all, point);
-}*/
 
 void ft_begining_all(t_all *all)
 {

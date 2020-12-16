@@ -15,9 +15,11 @@ int ft_resol(t_all *all, char *line, int *i)
 	ft_isspace(line, i);
 	while(line[*i] >= '0' && line[*i] <= '9')
 		y = y * 10 + (line[(*i)++] - '0');
-	mlx_get_screen_size(all->win.mlx_ptr, &x, &y);
-	all->win.x = x;
-	all->win.y = y;
+	mlx_get_screen_size(all->win.mlx_ptr, &all->win.x, &all->win.y);
+	if (!(x > all->win.x))
+		all->win.x = x;
+	if (!(y >all->win.y))
+		all->win.y = y;
 	if (!all->win.y || !all->win.x)
 		return (-4);
 	return (0);

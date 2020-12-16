@@ -63,7 +63,7 @@ int ft_xmp_check(t_all *all, char *filename, unsigned int **x)
 	if (!img)
 		return (-1);
 	*x = (unsigned int *)mlx_get_data_addr(all->img.img, &mas[2], &mas[3], &mas[4]);
-	printf("%d\n", **x);
+	//printf("%d\n", **x);
 	return (0);
 }
 
