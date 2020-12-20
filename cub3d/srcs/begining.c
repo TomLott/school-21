@@ -29,83 +29,99 @@ void ft_scale_img(t_win *win, t_point point, int colour)
 		point.y++;
 	}
 }
+void ft_move_tb(t_all *all, int i)
+{
+	int n;
+
+	n = (i == 'W') ? 1 : -1;
+	all->pl.x += n * all->pl.dir_x * MOVESPEED/10;
+	if (all->map.table[(int)(all->pl.y)][(int)(all->pl.x)] == '1')
+		all->pl.x += (n * all->pl.dir_x * MOVESPEED/10);
+	all->pl.y += n * all->pl.dir_y * MOVESPEED/10;
+	if (all->map.table[(int)(all->pl.y)][(int)(all->pl.x)] == '1')
+		all->pl.y -= (n * all->pl.dir_y * MOVESPEED/10);
+/*	if (all->map.table[(int)(all->pl.x)][(int)(all->pl.y)] == '2')
+	{
+		all->map.table[(int)(all->pl.x)][(int)(all->pl.x)] = '0';
+		all->map.sprite--;
+	}*/
+	printf("move\n");
+}
 
 void ft_move(t_all *all, int i)
 {
 	int n;
 
-	n = (i == 'W' || i == 'D') ? 1 : -1;
-	all->pl.x -= n * all->pl.dir_y * MOVESPEED;
-	if (all->map.table[(int)(all->pl.x)][(int)(all->pl.y)] == '1')
-		all->pl.x += n * all->pl.dir_y * MOVESPEED;
-	all->pl.y += n * all->pl.dir_x * MOVESPEED;
-	if (all->map.table[(int)(all->pl.x)][(int)(all->pl.y)] == '1')
-		all->pl.y += n * all->pl.dir_x * MOVESPEED;
-	if (all->map.table[(int)(all->pl.x)][(int)(all->pl.y)] == '2')
+	n = (i == 'D') ? 1 : -1;
+	all->pl.x -= n * all->pl.dir_y * MOVESPEED/10;
+	if (all->map.table[(int)(all->pl.y)][(int)(all->pl.x)] == '1')
+		all->pl.x += (n * all->pl.dir_x * MOVESPEED/10);
+	all->pl.y += n * all->pl.dir_x * MOVESPEED/10;
+	if (all->map.table[(int)(all->pl.y)][(int)(all->pl.x)] == '1')
+		all->pl.y -= (n * all->pl.dir_y * MOVESPEED/10);
+/*	if (all->map.table[(int)(all->pl.x)][(int)(all->pl.y)] == '2')
 	{
 		all->map.table[(int)(all->pl.x)][(int)(all->pl.x)] = '0';
 		all->map.sprite--;
-	}
+	}*/
+	printf("move\n");
 }
 
+void ft_turning(t_all *all, int i)
+{
+	double dir_x0;
+	double plane_x0;
+
+	dir_x0 = all->pl.dir_x;
+	all->pl.dir_x = all->pl.dir_x * cos(i * TANGLE) - all->pl.dir_y * sin(i * TANGLE);
+	all->pl.dir_y = dir_x0 * sin(i * TANGLE) + all->pl.dir_y * cos(i * TANGLE);
+	plane_x0 = all->cam.plane_x;
+	all->cam.plane_x = all->cam.plane_x * cos(i * TANGLE) - all->cam.plane_y * sin(i * TANGLE);
+	all->cam.plane_y = plane_x0 * sin(i * TANGLE) + all->cam.plane_y * cos(i * TANGLE);
+	printf("%f %f turning\n", all->pl.dir_x, all->pl.dir_y);
+}
+
+void ft_clean_img(t_all *all)
+{
+	int i;
+	int j;
+	char    *dst;
+
+	i = 0;
+	j = 0;
+	while (i < all->win.y)
+	{
+		j = 0;
+		while(j < all->win.x)
+		{
+			dst = all->img.addr + (i * all->img.line_length + j * (all->img.bits_per_pixel / 8));
+			*(unsigned int*)dst = 0x000000;
+			j++;
+		}
+		i++;
+	}
+	mlx_put_image_to_window(all->win.mlx_ptr, all->win.win, all->img.img, 0, 0);
+}
 
 int key_press(int key, t_all *all)
 {
-	int hyp;
-
-	mlx_clear_window(all->win.mlx_ptr, all->win.win);
+	ft_clean_img(all);
 	printf("%f %f key_pres\n", all->pl.x, all->pl.y);
 	printf("%f %f key_pres rot\n", all->pl.dir_x, all->pl.dir_y);
-
-	/*if (key == 13)
-	{
-		if ((all->map.table[(int)(all->cam.posX + all->pl.dir_x * MOVESPEED)]
-		[(int)(all->cam.posY)]) != '1')
-			all->pl.x += (all->pl.dir_x * MOVESPEED);
-		if ((all->map.table[(int)(all->cam.posX)]
-		[(int)(all->cam.posY + all->pl.dir_y * MOVESPEED)]) != '1')
-			all->pl.y += all->pl.dir_y * MOVESPEED;
-	}
-	else if (key == 1)
-	{
-		if (!(all->map.table[(int)(all->cam.posX - all->pl.dir_x * MOVESPEED)]
-		[(int)(all->cam.posY)]))
-			all->pl.x -= all->pl.dir_x * MOVESPEED;
-		if (!(all->map.table[(int)(all->cam.posX)]
-		[(int)(all->cam.posY - all->pl.dir_y * MOVESPEED)]))
-			all->pl.y -= all->pl.dir_y * MOVESPEED;*/
 	if (key == 13)
-		ft_move(all, 'W');
+		ft_move_tb(all, 'W');
 	else if (key == 0)
 		ft_move(all, 'A');
 	else if (key == 1)
-		ft_move(all, 'S');
+		ft_move_tb(all, 'S');
 	else if (key == 2)
 		ft_move(all, 'D');
 	else if (key == 53)
 		exit(0);
 	else if (key == 123)
-	{
-		all->pl.dir_x = all->pl.dir_x * cos(TURNANGLE)
-				- all->pl.dir_y * sin(TURNANGLE);
-		all->pl.dir_y = all->pl.dir_y * cos(TURNANGLE)
-				+ all->pl.dir_x * sin(TURNANGLE);
-		hyp = hypot(all->pl.dir_x, all->pl.dir_y);
-		all->pl.dir_x /= hyp;
-		all->pl.dir_y /= hyp;
-		printf("%f %f key_pres 123\n", all->pl.dir_x, all->pl.dir_y);
-	}
+		ft_turning(all, -1);
 	else if (key == 124)
-	{
-		all->pl.dir_x = all->pl.dir_x * cos(-TURNANGLE)
-				- all->pl.dir_y * sin(-TURNANGLE);
-		all->pl.dir_y = all->pl.dir_y * cos(-TURNANGLE)
-				+ all->pl.dir_x * sin(-TURNANGLE);
-		hyp = hypot(all->pl.dir_x, all->pl.dir_y);
-		all->pl.dir_x /= hyp;
-		all->pl.dir_y /= hyp;
-		printf("%f %f key_pres 124\n", all->pl.dir_x, all->pl.dir_y);
-	}
+		ft_turning(all, 1);
 	ft_screen(all);
 	return (1);
 }

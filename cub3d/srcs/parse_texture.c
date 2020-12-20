@@ -46,7 +46,7 @@ int ft_xmp_check(t_all *all, char *filename, unsigned int **x)
 	int fd;
 	int mas[5];
 	int i;
-	char *img;
+	void *img;
 
 	i = 0;
 	fd = 0;
@@ -58,12 +58,11 @@ int ft_xmp_check(t_all *all, char *filename, unsigned int **x)
 	if ((fd = open(filename, O_RDONLY)) == -1)
 		return (-1);
 	close(fd);
-	img = mlx_xpm_file_to_image(all->img.img, filename,
+	img = mlx_xpm_file_to_image(all->win.mlx_ptr, filename,
 									   &mas[0], &mas[1]);
 	if (!img)
 		return (-1);
-	*x = (unsigned int *)mlx_get_data_addr(all->img.img, &mas[2], &mas[3], &mas[4]);
-	//printf("%d\n", **x);
+	*x = (unsigned int *)mlx_get_data_addr(img, &mas[2], &mas[3], &mas[4]);
 	return (0);
 }
 
