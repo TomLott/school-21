@@ -3,7 +3,7 @@ void            my_mlx_pixel_put(t_all *all, int x, int y, int color)
 {
 	char    *dst;
 
-	color = (all->ray.side == 1) ? 0x0FFFFF : color;
+	color = (all->ray.side == 1) ? 0x32CD32 : color;
 	dst = all->img.addr + (y * all->img.line_length + x * (all->img.bits_per_pixel / 8));
 	*(unsigned int*)dst = color;
 }
@@ -12,11 +12,24 @@ void ft_text_colour(t_all *all, t_cam *c, t_dist *d, t_hight hig)
 {
 	int i = 0;
 	int j = 0;
+	char    *dst;
 
+	while (i < hig.start)
+	{
+		dst = all->img.addr + (i * all->img.line_length + c->i * (all->img.bits_per_pixel / 8));
+		*(unsigned int*)dst = all->tex.c;
+		i++;
+	}
 	while (hig.start < hig.end)
 	{
-		my_mlx_pixel_put(all, c->i, hig.start, 0x000FFF);
+		my_mlx_pixel_put(all, c->i, hig.start, 0x006400);
 		hig.start++;
+	}
+	while (hig.end < all->win.y)
+	{
+		dst = all->img.addr + (hig.end * all->img.line_length + c->i * (all->img.bits_per_pixel / 8));
+		*(unsigned int*)dst = all->tex.f;
+		hig.end++;
 	}
 }
 
@@ -34,7 +47,7 @@ void ft_hight(t_all *all, t_cam *c, t_dist *d)
 	if (hig.end >= hig.h)
 		hig.end = hig.h - 1;
 	ft_text_colour(all, c, d, hig);
-	/**while(hig.j < all->win.x)
+	/*while(hig.j < all->win.x)
 	{
 		ft_floor(all, c, d, &hig);
 		hig.j++;

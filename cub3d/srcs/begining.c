@@ -45,7 +45,7 @@ void ft_move_tb(t_all *all, int i)
 		all->map.table[(int)(all->pl.x)][(int)(all->pl.x)] = '0';
 		all->map.sprite--;
 	}*/
-	printf("move\n");
+	//printf("move\n");
 }
 
 void ft_move(t_all *all, int i)
@@ -64,7 +64,7 @@ void ft_move(t_all *all, int i)
 		all->map.table[(int)(all->pl.x)][(int)(all->pl.x)] = '0';
 		all->map.sprite--;
 	}*/
-	printf("move\n");
+//	printf("move\n");
 }
 
 void ft_turning(t_all *all, int i)
@@ -78,7 +78,7 @@ void ft_turning(t_all *all, int i)
 	plane_x0 = all->cam.plane_x;
 	all->cam.plane_x = all->cam.plane_x * cos(i * TANGLE) - all->cam.plane_y * sin(i * TANGLE);
 	all->cam.plane_y = plane_x0 * sin(i * TANGLE) + all->cam.plane_y * cos(i * TANGLE);
-	printf("%f %f turning\n", all->pl.dir_x, all->pl.dir_y);
+	//printf("%f %f turning\n", all->pl.dir_x, all->pl.dir_y);
 }
 
 void ft_clean_img(t_all *all)
@@ -106,8 +106,8 @@ void ft_clean_img(t_all *all)
 int key_press(int key, t_all *all)
 {
 	ft_clean_img(all);
-	printf("%f %f key_pres\n", all->pl.x, all->pl.y);
-	printf("%f %f key_pres rot\n", all->pl.dir_x, all->pl.dir_y);
+	//printf("%f %f key_pres\n", all->pl.x, all->pl.y);
+	//printf("%f %f key_pres rot\n", all->pl.dir_x, all->pl.dir_y);
 	if (key == 13)
 		ft_move_tb(all, 'W');
 	else if (key == 0)
