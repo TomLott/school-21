@@ -41,33 +41,25 @@ int ft_colour(char *line, int *i, t_all *all)
 	return (0);
 }
 
-int ft_xmp_check(t_all *all, char *filename, unsigned int **x)
+int ft_xmp_check(t_all *all, char *filename, t_tex *n)
 {
 	int fd;
-	int mas[5];
-	int i;
-	void *img;
 
-	i = 0;
 	fd = 0;
-	img = NULL;
-	while (mas[i])
-		mas[i++] = 0;
 	if (!file_format(filename, ".xmp"))
 		return (-1);
 	if ((fd = open(filename, O_RDONLY)) == -1)
 		return (-1);
 	close(fd);
-	img = mlx_xpm_file_to_image(all->win.mlx_ptr, filename,
-									   &mas[0], &mas[1]);
-	if (!img)
+	n->img = mlx_xpm_file_to_image(all->win.mlx_ptr, filename, &n->x, &n->y);
+	if (!n->img)
 		return (-1);
-	*x = (unsigned int *)mlx_get_data_addr(img, &mas[2], &mas[3], &mas[4]);
+	n->addr = (unsigned int *)mlx_get_data_addr(n->img, &n->bits_per_pixel, &n->line_length, &n->endian);
 	return (0);
 }
 
 
-int ft_texture(t_all *all, char *line, int *i, unsigned int **x)
+int ft_texture(t_all *all, char *line, int *i, t_tex *n)
 {
 	int k;
 	char *filename;
@@ -84,7 +76,7 @@ int ft_texture(t_all *all, char *line, int *i, unsigned int **x)
 	while (line[*i] != ' ' && line[*i] != '\0')
 		filename[k++] = line[(*i)++];
 	filename[k] = '\0';
-	k = ft_xmp_check(all, filename, x);
+	k = ft_xmp_check(all, filename, n);
 	free(filename);
 	return (k == -1 ? -5 : 0);
 }

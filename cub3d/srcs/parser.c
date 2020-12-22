@@ -34,15 +34,15 @@ int line_parse(char *line, t_all *all)
 	if (line[i] == 'R')
 		all->err.x = ft_resol(all, line, &i);
 	else if (line[i] == 'S' && line[i + 1] == 'O' && line[i + 2] == ' ')
-		all->err.x = ft_texture(all, line, &i, &all->tex.s);
+		all->err.x = ft_texture_s(all, line, &i, &all->tex_s);
 	else if (line[i] == 'N' && line[i + 1] == 'O' && line[i + 2] == ' ')
-		all->err.x = ft_texture(all, line, &i, &all->tex.n);
+		all->err.x = ft_texture_n(all, line, &i, &all->tex_n);
 	else if (line[i] == 'W' && line[i + 1] == 'E' && line[i + 2] == ' ')
-		all->err.x = ft_texture(all, line, &i, &all->tex.w);
+		all->err.x = ft_texture_w(all, line, &i, &all->tex_w);
 	else if (line[i] == 'E' && line[i + 1] == 'A' && line[i + 2] == ' ')
-		all->err.x = ft_texture(all, line, &i, &all->tex.e);
+		all->err.x = ft_texture_e(all, line, &i, &all->tex_e);
 	else if (line[i] == 'S' && line[i + 1] == ' ')
-		all->err.x = ft_texture(all, line, &i, &all->tex.item);
+		all->err.x = ft_texture(all, line, &i, &all->tex);
 	else if (line[i] == 'C' && line[i + 1] == ' ')
 		all->err.x = ft_colour(line, &i, all);
 	else if (line[i] == 'F' && line[i + 1] == ' ')

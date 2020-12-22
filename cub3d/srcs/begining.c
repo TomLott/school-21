@@ -78,7 +78,6 @@ void ft_turning(t_all *all, int i)
 	plane_x0 = all->cam.plane_x;
 	all->cam.plane_x = all->cam.plane_x * cos(i * TANGLE) - all->cam.plane_y * sin(i * TANGLE);
 	all->cam.plane_y = plane_x0 * sin(i * TANGLE) + all->cam.plane_y * cos(i * TANGLE);
-	//printf("%f %f turning\n", all->pl.dir_x, all->pl.dir_y);
 }
 
 void ft_clean_img(t_all *all)
