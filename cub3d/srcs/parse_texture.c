@@ -46,7 +46,7 @@ int ft_xmp_check(t_all *all, char *filename, t_tex *n)
 	int fd;
 
 	fd = 0;
-	if (!file_format(filename, ".xmp"))
+	if (!file_format(filename, ".xpm"))
 		return (-1);
 	if ((fd = open(filename, O_RDONLY)) == -1)
 		return (-1);

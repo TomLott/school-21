@@ -1,5 +1,5 @@
 #include "../includes/cub.h"
-
+/**
 unsigned int ft_colour_ch(t_all *all, unsigned int color)
 {
 	char i;
@@ -11,7 +11,7 @@ unsigned int ft_colour_ch(t_all *all, unsigned int color)
 		color = 'w';
 	else if (all->ray.side)
 		color = 'e';
-}
+}*/
 
 void            my_mlx_pixel_put(t_all *all, int x, int y, t_hight *h)
 {
@@ -19,7 +19,7 @@ void            my_mlx_pixel_put(t_all *all, int x, int y, t_hight *h)
 	unsigned color;
 
 	//color = (all->ray.side == 1) ? 0x32CD32 : color;
-	color = ft_colour_ch(all, color);
+//	color = ft_colour_ch(all, color);
 	dst = all->img.addr + (y * all->img.line_length + x * (all->img.bits_per_pixel / 8));
 	*(unsigned int*)dst = color;
 }
@@ -35,10 +35,10 @@ void ft_text_colour(t_all *all, t_cam *c, t_dist *d, t_hight hig)
 		*(unsigned int*)dst = all->tex.c;
 		i++;
 	}
-	(all->ray.side == 0 && all->pl.x > all->pl.dir_x + all->pl.x) ? ft_wallcast_n(all, c, &all->tex_n, hig) : 1;
-	(all->ray.side == 0) ? ft_wallcast_s(all, 's') : 1;
-	(all->ray.side == 1 && all->pl.y > all->pl.dir_y + all->pl.y) ? ft_wallcast_w(all, c, d, h) : 1;
-	(all->ray.side == 1) ? ft_wallcast_n(all, 'e') : 1;
+	(all->ray.side == 0 && all->pl.x > all->pl.dir_x + all->pl.x) ? ft_wallcast_n(all, c, &all->tex_n, &hig) : 1;
+	(all->ray.side == 0) ? ft_wallcast_s(all, c, &all->tex_s, &hig) : 1;
+	(all->ray.side == 1 && all->pl.y > all->pl.dir_y + all->pl.y) ? ft_wallcast_w(all, c, &all->tex_w, &hig) : 1;
+	(all->ray.side == 1) ? ft_wallcast_e(all, c, &all->tex_e, &hig) : 1;
 
 	/**
 	while (hig.start < hig.end)

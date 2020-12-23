@@ -9,7 +9,7 @@ void ft_ceiling(t_all *all, t_cam *c, t_floor *fl, int i)
 	cl->y = (int)fl->y;
 	fl->x += fl->step_x;
 	fl->y += fl->step_y;
-	my_mlx_pixel_put(all, fl->x, fl->y, 0x00000F);
+//	my_mlx_pixel_put(all, fl->x, fl->y, 0x00000F);
 }
 
 void ft_floor(t_all *all, t_cam *c, t_dist *d, t_hight *hig)
