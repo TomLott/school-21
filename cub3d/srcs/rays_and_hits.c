@@ -29,23 +29,21 @@ void ft_text_colour(t_all *all, t_cam *c, t_dist *d, t_hight hig)
 	int i = 0;
 	char    *dst;
 
+
 	while (i < hig.start)
 	{
 		dst = all->img.addr + (i * all->img.line_length + c->i * (all->img.bits_per_pixel / 8));
 		*(unsigned int*)dst = all->tex.c;
 		i++;
 	}
-	(all->ray.side == 0 && all->pl.x > all->pl.dir_x + all->pl.x) ? ft_wallcast_n(all, c, &all->tex_n, &hig) : 1;
-	(all->ray.side == 0) ? ft_wallcast_s(all, c, &all->tex_s, &hig) : 1;
-	(all->ray.side == 1 && all->pl.y > all->pl.dir_y + all->pl.y) ? ft_wallcast_w(all, c, &all->tex_w, &hig) : 1;
-	(all->ray.side == 1) ? ft_wallcast_e(all, c, &all->tex_e, &hig) : 1;
-
-	/**
-	while (hig.start < hig.end)
-	{
-		my_mlx_pixel_put(all, c->i, hig.start, hig);
-		hig.start++;
-	}*/
+	if (all->ray.side == 0 && (all->pl.x > all->pl.dir_x + all->pl.x))
+		ft_wallcast_n(all, c, &all->tex_n, &hig);
+	else if (all->ray.side == 0)
+		ft_wallcast_s(all, c, &all->tex_s, &hig);
+	if (all->ray.side == 1 && (all->pl.y > all->pl.dir_y + all->pl.y))
+		ft_wallcast_w(all, c, &all->tex_w, &hig);
+	else if (all->ray.side == 1)
+		ft_wallcast_e(all, c, &all->tex_e, &hig);
 	while (hig.end < all->win.y)
 	{
 		dst = all->img.addr + (hig.end * all->img.line_length + c->i * (all->img.bits_per_pixel / 8));
@@ -67,12 +65,15 @@ void ft_hight(t_all *all, t_cam *c, t_dist *d)
 	hig.end = (int)(hig.hight / 2 + hig.h / 2);
 	if (hig.end >= hig.h)
 		hig.end = hig.h - 1;
+	if (all->ray.side == 0)
+		hig.wall_x = c->posY + d->wall_dist * all->ray.y;
+	else
+		hig.wall_x = c->posX + d->wall_dist * all->ray.x;
+	hig.wall_x -= floor(hig.wall_x);
+	//printf("%f in higth\n", hig.wall_x);
 	ft_text_colour(all, c, d, hig);
-	/*while(hig.j < all->win.x)
-	{
-		ft_floor(all, c, d, &hig);
-		hig.j++;
-	}*/
+
+
 }
 
 void ft_hit(t_all *all, t_cam *c, t_dist *d)
@@ -101,8 +102,6 @@ void ft_hit(t_all *all, t_cam *c, t_dist *d)
 		d->wall_dist = (c->map_x - c->posX + (1 - d->step_x) / 2) / all->ray.x;
 	else
 		d->wall_dist = (c->map_y - c->posY + (1 - d->step_y) / 2) / all->ray.y;
-	//printf("%d side\n", all->ray.side);
-	//printf("%f dist\n", d->wall_dist);
 	ft_hight(all, c, d);
 }
 

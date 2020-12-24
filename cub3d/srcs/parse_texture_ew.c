@@ -5,7 +5,7 @@ int ft_xmp_check_w(t_all *all, char *filename, t_tex_w *n)
 	int fd;
 
 	fd = 0;
-	if (!file_format(filename, ".xmp"))
+	if (!file_format(filename, ".xpm"))
 		return (-1);
 	if ((fd = open(filename, O_RDONLY)) == -1)
 		return (-1);
@@ -45,7 +45,7 @@ int ft_xmp_check_e(t_all *all, char *filename, t_tex_e *n)
 	int fd;
 
 	fd = 0;
-	if (!file_format(filename, ".xmp"))
+	if (!file_format(filename, ".xpm"))
 		return (-1);
 	if ((fd = open(filename, O_RDONLY)) == -1)
 		return (-1);
