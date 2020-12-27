@@ -59,7 +59,7 @@ void ft_move(t_all *all, int i)
 	all->pl.y += n * all->pl.dir_x * MOVESPEED/10;
 	if (all->map.table[(int)(all->pl.y)][(int)(all->pl.x)] == '1')
 		all->pl.y -= (n * all->pl.dir_y * MOVESPEED/10);
-/*	if (all->map.table[(int)(all->pl.x)][(int)(all->pl.y)] == '2')
+/**	if (all->map.table[(int)(all->pl.x)][(int)(all->pl.y)] == '2')
 	{
 		all->map.table[(int)(all->pl.x)][(int)(all->pl.x)] = '0';
 		all->map.sprite--;
@@ -127,6 +127,7 @@ int key_press(int key, t_all *all)
 
 void ft_begining_all(t_all *all)
 {
+	all->tex.sp_buf = (double *)malloc(sizeof(double) * all->win.x + 1);
 	all->win.mlx_ptr = mlx_init();
 	all->win.win = mlx_new_window(all->win.mlx_ptr, all->win.x, all->win.y, "game");
 	all->img.img = mlx_new_image(all->win.mlx_ptr, all->win.x, all->win.y);

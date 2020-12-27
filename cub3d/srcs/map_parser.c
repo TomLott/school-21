@@ -43,6 +43,8 @@ int ft_check_map(t_all *all)
 		j = 0;
 		while(all->map.table[i][j])
 		{
+			if (all->map.table[i][j] == OK + 1)
+				all->tex.sprite++;
 			if (all->map.table[i][j] == '0')
 			{
 				if (!map_ok(i, j, all))

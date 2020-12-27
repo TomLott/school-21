@@ -1,17 +1,4 @@
 #include "../includes/cub.h"
-/**
-unsigned int ft_colour_ch(t_all *all, unsigned int color)
-{
-	char i;
-	if (all->ray.side == 0 && all->pl.x > all->pl.dir_x + all->pl.x)
-		i = 'n';
-	else if (all->ray.side == 0)
-		i = 's';
-	if (all->ray.side == 1 && all->pl.y > all->pl.dir_y + all->pl.y)
-		color = 'w';
-	else if (all->ray.side)
-		color = 'e';
-}*/
 
 void            my_mlx_pixel_put(t_all *all, int x, int y, t_hight *h)
 {
@@ -36,14 +23,14 @@ void ft_text_colour(t_all *all, t_cam *c, t_dist *d, t_hight hig)
 		*(unsigned int*)dst = all->tex.c;
 		i++;
 	}
-	if (all->ray.side == 0 && (all->pl.x > all->pl.dir_x + all->pl.x))
-		ft_wallcast_n(all, c, &all->tex_n, &hig);
-	else if (all->ray.side == 0)
-		ft_wallcast_s(all, c, &all->tex_s, &hig);
-	if (all->ray.side == 1 && (all->pl.y > all->pl.dir_y + all->pl.y))
-		ft_wallcast_w(all, c, &all->tex_w, &hig);
-	else if (all->ray.side == 1)
+	if (all->ray.side == 0 && (all->pl.x > all->ray.x + all->pl.x))
 		ft_wallcast_e(all, c, &all->tex_e, &hig);
+	else if (all->ray.side == 0)
+		ft_wallcast_w(all, c, &all->tex_w, &hig);
+	if (all->ray.side == 1 && (all->pl.y > all->ray.y + all->pl.y))
+		ft_wallcast_n(all, c, &all->tex_n, &hig);
+	else if (all->ray.side == 1)
+		ft_wallcast_s(all, c, &all->tex_s, &hig);
 	while (hig.end < all->win.y)
 	{
 		dst = all->img.addr + (hig.end * all->img.line_length + c->i * (all->img.bits_per_pixel / 8));
@@ -70,10 +57,7 @@ void ft_hight(t_all *all, t_cam *c, t_dist *d)
 	else
 		hig.wall_x = c->posX + d->wall_dist * all->ray.x;
 	hig.wall_x -= floor(hig.wall_x);
-	//printf("%f in higth\n", hig.wall_x);
 	ft_text_colour(all, c, d, hig);
-
-
 }
 
 void ft_hit(t_all *all, t_cam *c, t_dist *d)
@@ -102,6 +86,7 @@ void ft_hit(t_all *all, t_cam *c, t_dist *d)
 		d->wall_dist = (c->map_x - c->posX + (1 - d->step_x) / 2) / all->ray.x;
 	else
 		d->wall_dist = (c->map_y - c->posY + (1 - d->step_y) / 2) / all->ray.y;
+	all->tex.sp_buf[c->i] = d->wall_dist;
 	ft_hight(all, c, d);
 }
 
@@ -157,15 +142,8 @@ void ft_ray(t_all *all, t_cam *c, t_dist *d)
 	ft_step(all, c, d);
 }
 
-void ft_get_texture(t_tex *tex, t_all *all)
-{
-
-
-}
-
 void ft_init(t_all *all, t_cam *cam, t_dist *dist)
 {
-	ft_get_texture(&all->tex, all);
 	cam->i = 0;
 	cam->posX = all->pl.x;
 	cam->posY = all->pl.y;
@@ -183,6 +161,7 @@ void ft_init(t_all *all, t_cam *cam, t_dist *dist)
 		ft_ray(all, cam, dist);
 		cam->i++;
 	}
+	all->tex.sp_buf[all->win.x] = 0;
 }
 void ft_new_bzero(t_all **all)
 {
@@ -194,6 +173,7 @@ void ft_screen(t_all *all)
 {
 	ft_new_bzero(&all);
 	ft_init(all, &all->cam, &all->dist);
+	ft_sprite(all, &all->dist, &all->cam);
 	mlx_put_image_to_window(all->win.mlx_ptr, all->win.win, all->img.img, 0, 0);
 }
 

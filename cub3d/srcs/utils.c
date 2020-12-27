@@ -66,7 +66,7 @@ int		ft_stringlen(t_all *all, char *line)
 			i++;
 		line++;
 	}
-	if (all->map.x && all->map.x != i)
-		return (-1);
+	//if (all->map.x && all->map.x != i)
+	//	return (-1);
 	return (i);
 }
