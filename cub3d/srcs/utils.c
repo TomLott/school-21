@@ -42,15 +42,21 @@ void ft_free(char **s)
 
 int ft_errormessage(int i)
 {
-	(i == -1) ? write(2, "Error: Can't allocate memory (malloc error)\n", 44) : 1;
-	(i == -2) ? write(2, "Error: Invalid map\n", 19) : 1;
-	(i == -3) ? write(2, "Error: Map should be rectangle\n", 31) : 1;
-	(i == -4) ? write(2, "Error: Invalid resolution\n", 26) : 1;
-	(i == -5) ? write(2, "Error: Invalid image(textures)\n", 31) : 1;
-	(i == -6) ? write(2, "Error: Invalid colour\n", 22) : 1;
-	(i == -7) ? write(2, "Error: extra line/symbols in file\n", 34) : 1;
-	(i == -8) ? write(2, "Error\n one or few parametres is missing or invalid for some reason\n", 67) : 1;
-  	return (-1);
+	(i == -1) ? write(2, "Error\nCan't allocate memory (malloc error)\n", 43) : 1;
+	(i == -2) ? write(2, "Error\nInvalid map\n", 18) : 1;
+	(i == -3) ? write(2, "Error\nMap should be rectangle\n", 30) : 1;
+	(i == -4) ? write(2, "Error\nInvalid resolution\n", 25) : 1;
+	(i == -5) ? write(2, "Error\nInvalid image(textures)\n", 30) : 1;
+	(i == -6) ? write(2, "Error\nInvalid colour\n", 21) : 1;
+	(i == -7) ? write(2, "Error\nExtra line/symbols in file\n", 33) : 1;
+	(i == -8) ? write(2, "Error\nOne or few parametres is missing or invalid for some reason\n", 66) : 1;
+	(i == -9) ? write(2, "Error\nCan not create or open screenshot file\n", 45) : 1;
+	return (-1);
+}
+
+void close_prog(t_all *all)
+{
+	exit ;
 }
 
 int		ft_stringlen(t_all *all, char *line)
@@ -66,7 +72,5 @@ int		ft_stringlen(t_all *all, char *line)
 			i++;
 		line++;
 	}
-	//if (all->map.x && all->map.x != i)
-	//	return (-1);
 	return (i);
 }

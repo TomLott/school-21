@@ -8,6 +8,7 @@ void ft_wallcast_n(t_all *all, t_cam *c, t_tex_n *n, t_hight *h)
 	int i;
 	char *dst;
 
+
 	h->tex_x = (int)(h->wall_x * (double)(n->x));
 	if (all->ray.side == 0 && all->ray.x > 0)
 		h->tex_x = n->x - h->tex_x - 1;

@@ -1,5 +1,5 @@
 #include "../includes/cub.h"
-
+/**
 void            my_mlx_pixel_put(t_all *all, int x, int y, t_hight *h)
 {
 	char    *dst;
@@ -9,13 +9,12 @@ void            my_mlx_pixel_put(t_all *all, int x, int y, t_hight *h)
 //	color = ft_colour_ch(all, color);
 	dst = all->img.addr + (y * all->img.line_length + x * (all->img.bits_per_pixel / 8));
 	*(unsigned int*)dst = color;
-}
+}*/
 
 void ft_text_colour(t_all *all, t_cam *c, t_dist *d, t_hight hig)
 {
 	int i = 0;
 	char    *dst;
-
 
 	while (i < hig.start)
 	{
@@ -44,7 +43,7 @@ void ft_hight(t_all *all, t_cam *c, t_dist *d)
 	t_hight hig;
 
 	ft_bzero(&hig, sizeof(t_hight));
-	hig.h = all->win.x / 1.5;
+	hig.h = all->win.y;
 	hig.hight = (int)(hig.h / d->wall_dist);
 	hig.start = (int)(-hig.hight / 2 + hig.h / 2);
 	if (hig.start < 0)
@@ -66,7 +65,6 @@ void ft_hit(t_all *all, t_cam *c, t_dist *d)
 	all->ray.hit = 0;
 	while (all->ray.hit == 0)
 	{
-	//	printf("%c\n", all->map.table[c->map_y][c->map_x]);
 		if (d->side_x < d->side_y)
 		{
 			d->side_x += d->delta_x;
@@ -148,21 +146,43 @@ void ft_init(t_all *all, t_cam *cam, t_dist *dist)
 	cam->posX = all->pl.x;
 	cam->posY = all->pl.y;
 	if (all->flag == 0)
-	{
-		all->cam.plane_y = 0;
-		all->cam.plane_x = 0.66;
-		all->flag = 1;
-	}
+		ft_cam_plane(all, cam);
 	while (cam->i < all->win.x)
 	{
 		cam->x = 2 * cam->i / (double) all->win.x - 1;
-		all->ray.x = all->pl.dir_x + cam->plane_x * cam->x; /** changed x and y*/
+		all->ray.x = all->pl.dir_x + cam->plane_x * cam->x;
 		all->ray.y = all->pl.dir_y + cam->plane_y * cam->x;
 		ft_ray(all, cam, dist);
 		cam->i++;
 	}
 	all->tex.sp_buf[all->win.x] = 0;
 }
+
+void ft_cam_plane(t_all *all, t_cam *c)
+{
+	if (all->pl.symbol == 'N')
+	{
+		all->cam.plane_y = 0;
+		all->cam.plane_x = 0.66;
+	}
+	else if (all->pl.symbol == 'S')
+	{
+		all->cam.plane_x = -0.66;
+		all->cam.plane_y = 0;
+	}
+	else if (all->pl.symbol == 'E')
+	{
+		all->cam.plane_x = 0;
+		all->cam.plane_y = 0.66;
+	}
+	else if (all->pl.symbol == 'W')
+	{
+		all->cam.plane_x = 0;
+		all->cam.plane_y = -0.66;
+	}
+	all->flag = 1;
+}
+
 void ft_new_bzero(t_all **all)
 {
 	(*all)->cam.y = 0;
@@ -174,6 +194,11 @@ void ft_screen(t_all *all)
 	ft_new_bzero(&all);
 	ft_init(all, &all->cam, &all->dist);
 	ft_sprite(all, &all->dist, &all->cam);
+	if (all->save == 1)
+	{
+		ft_screenshot(all);
+		all->save = 0;
+	}
 	mlx_put_image_to_window(all->win.mlx_ptr, all->win.win, all->img.img, 0, 0);
 }
 
