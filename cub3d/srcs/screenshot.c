@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   screenshot.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: itollett <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/01/06 13:42:01 by itollett          #+#    #+#             */
+/*   Updated: 2021/01/06 13:42:03 by itollett         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/cub.h"
 
-void bit_offset(unsigned char *head, unsigned int i)
+void	bit_offset(unsigned char *head, unsigned int i)
 {
 	head[0] = (unsigned char)(i % 256);
 	head[1] = (unsigned char)(i / 256 % 256);
@@ -8,12 +20,12 @@ void bit_offset(unsigned char *head, unsigned int i)
 	head[3] = (unsigned char)(i / 256 / 256 / 256);
 }
 
-int making_header(int fd, t_all *a, int size)
+int		making_header(int fd, t_all *a)
 {
-	unsigned char head[54];
-	int file_size;
+	unsigned char	head[54];
+	int				file_size;
 
-	ft_bzero(head,54);
+	ft_bzero(head, 54);
 	file_size = 54 + (a->win.x * a->win.y * 4);
 	head[0] = (unsigned char)('B');
 	head[1] = (unsigned char)('M');
@@ -27,59 +39,43 @@ int making_header(int fd, t_all *a, int size)
 	return (!(write(fd, head, 54) < 0));
 }
 
-void ft_buffer(unsigned char *buff, unsigned int i)
+int		putting_data(int fd, t_all *a)
 {
-	buff[0] = (unsigned char)(i % 256);
-	buff[1] = (unsigned char)(i / 256 % 256);
-	buff[2] = (unsigned char)(i / 256 / 256 % 256);
-	buff[3] = (unsigned char)(0);
-}
-
-int putting_data(int fd, t_all *a, int size)
-{
-	unsigned char buff[4];
-	int x;
-	int y;
-	unsigned int *coord; /**coordinates*/
+	unsigned char	buff[4];
+	int				y;
+	int				line_length;
 
 	ft_bzero(buff, 4);
-	y = (a->win.y) * a->win.x;
-	while(y >= 0)
+	y = a->win.y;
+	line_length = a->win.x * a->img.bits_per_pixel / 8;
+	while (y >= 0)
 	{
-		x = 0;
-		while(x < a->win.x)
-		{
-			coord = (unsigned int *)(a->img.img + y);
-			//printf("%u\n", *coord);
-			ft_buffer(buff, *coord);
-			//write(1, buff, 4);
-			write(fd, buff, 4);
-			y++;
-			x++;
-		}
-		y -= (2 * a->win.x);
+		write(fd, (unsigned char *)(a->img.addr + y
+		* a->img.line_length), line_length);
+		y--;
 	}
 	return (1);
 }
 
-int taking_screenshot(t_all *a)
+int		taking_screenshot(t_all *a)
 {
 	int fd;
-	int size;
 
-	size = (4 - (a->win.x * 3) % 4) % 4;
-	fd = open("screenshot.bmp", O_WRONLY| O_CREAT, 0777 | O_TRUNC | O_APPEND);
-	making_header(fd, a, size);
-	putting_data(fd, a, size);
+	ft_init(a, &a->cam, &a->dist);
+	ft_sprite(a);
+	if (!(fd = open("screenshot.bmp", O_WRONLY | O_CREAT, 0777 | O_TRUNC | O_APPEND)))
+		return (0);
+	making_header(fd, a);
+	putting_data(fd, a);
 	close(fd);
 	return (1);
 }
 
-void ft_screenshot(t_all *all)
+void	ft_screenshot(t_all *all)
 {
 	write(1, "Making screenshot\n", 18);
 	if (!(taking_screenshot(all)))
-		ft_errormessage(-9);
+		ft_errormessage(-9, all);
 	write(1, "Screenshot saved\n", 17);
 	close_prog(all);
 }

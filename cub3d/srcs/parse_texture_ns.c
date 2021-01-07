@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_texture_ns.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: itollett <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/01/06 13:41:02 by itollett          #+#    #+#             */
+/*   Updated: 2021/01/06 13:41:04 by itollett         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/cub.h"
 
-int ft_xmp_check_n(t_all *all, char *filename, t_tex_n *n)
+int		ft_xmp_check_n(t_all *all, char *filename, t_tex_n *n)
 {
 	int fd;
 
@@ -13,14 +25,15 @@ int ft_xmp_check_n(t_all *all, char *filename, t_tex_n *n)
 	n->img = mlx_xpm_file_to_image(all->win.mlx_ptr, filename, &n->x, &n->y);
 	if (!n->img)
 		return (-1);
-	n->addr = (unsigned int *)mlx_get_data_addr(n->img, &n->bits_per_pixel, &n->line_length, &n->endian);
+	n->addr = (unsigned int *)mlx_get_data_addr(n->img,
+		&n->bits_per_pixel, &n->line_length, &n->endian);
 	return (0);
 }
 
-int ft_texture_n(t_all *all, char *line, int *i, t_tex_n *n)
+int		ft_texture_n(t_all *all, char *line, int *i, t_tex_n *n)
 {
-	int k;
-	char *filename;
+	int		k;
+	char	*filename;
 
 	(*i) = (*i) + 2;
 	ft_isspace(line, i);
@@ -36,10 +49,11 @@ int ft_texture_n(t_all *all, char *line, int *i, t_tex_n *n)
 	filename[k] = '\0';
 	k = ft_xmp_check_n(all, filename, n);
 	free(filename);
+	all->counter++;
 	return (k == -1 ? -5 : 0);
 }
 
-int ft_xmp_check_s(t_all *all, char *filename, t_tex_s *n)
+int		ft_xmp_check_s(t_all *all, char *filename, t_tex_s *n)
 {
 	int fd;
 
@@ -52,15 +66,15 @@ int ft_xmp_check_s(t_all *all, char *filename, t_tex_s *n)
 	n->img = mlx_xpm_file_to_image(all->win.mlx_ptr, filename, &n->x, &n->y);
 	if (!n->img)
 		return (-1);
-	n->addr = (unsigned int *)mlx_get_data_addr(n->img, &n->bits_per_pixel, &n->line_length, &n->endian);
+	n->addr = (unsigned int *)mlx_get_data_addr(n->img,
+		&n->bits_per_pixel, &n->line_length, &n->endian);
 	return (0);
 }
 
-
-int ft_texture_s(t_all *all, char *line, int *i, t_tex_s *n)
+int		ft_texture_s(t_all *all, char *line, int *i, t_tex_s *n)
 {
-	int k;
-	char *filename;
+	int		k;
+	char	*filename;
 
 	(*i) = (*i) + 2;
 	ft_isspace(line, i);
@@ -76,6 +90,6 @@ int ft_texture_s(t_all *all, char *line, int *i, t_tex_s *n)
 	filename[k] = '\0';
 	k = ft_xmp_check_s(all, filename, n);
 	free(filename);
+	all->counter++;
 	return (k == -1 ? -5 : 0);
 }
-
