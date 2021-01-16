@@ -1,9 +1,10 @@
-FROM alpine:latest
+FROM alpine:3.11.7
 
 #RUN apk update && apk upgrade
 RUN apk add nginx openssl openssh supervisor
 
 COPY ./srcs/nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY ./srcs/nginx/supervisor.conf /etc/supervisor.conf
 
 RUN openssl req -x509 -nodes -days 365 \
     -newkey rsa:2048 -keyout /etc/ssl/private/nginx-selfsigned.key \
