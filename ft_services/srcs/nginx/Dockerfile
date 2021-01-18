@@ -1,36 +1,22 @@
-FROM alpine
+FROM alpine:3.12.3
+USER root
 
 RUN apk update && apk upgrade
-RUN apk add openssh
-RUN apk add openssl
-RUN apk add nginx
-#RUN apk add letegraf (ссылка)
+RUN apk add nginx openssl openrc bash
 
-# creating user for web server
-RUN adduser -D -g 'www' www
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY start.sh /
 
-RUN mkdir /www
-RUN chown -R www:www /var/lib/nginx
-RUN chown -R www:www /www
+RUN chmod -R 777 ./start.sh
 RUN mkdir -p /run/nginx
 
-COPY nginx.conf /etc/nginx/
-COPY index.html /www/
-#COPY script.js /www/
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+    -out nginx-selfsigned.crt \
+    -keyout nginx-selfsigned.key \
+     -subj "/C=RU/ST=-/L=-/O=-/OU=-/CN=ft_services"
 
-RUN adduser -D user
-RUN echo "user:password" | chpasswd
-RUN ssh-keygen -A
-RUN yes "" | openssl req -x509 -nodes -day 365 -newkey rsa:2048\
-	-keyout /etc/ssl/private/server.key \
-	-out /etc/ssl/certs/server.crt
+#RUN ssh-keygen -A && adduser -D ssh_admin && echo "ssh_admin:1111" | chpasswd
 
-RUN mkdir -p /etc/telegraf
-COPY ./telegraf.conf /etc/telegraf/
+EXPOSE 80 443
 
-RUN echo '--SSH--' > /etc/motd
-
-COPY start.sh ./
-RUN chmod +x /start.sh
-CMD sh ./start.sh
-EXPOSE 80 443 22
+CMD ["sh", "start.sh"]
