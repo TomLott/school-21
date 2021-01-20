@@ -1,9 +1,15 @@
-/usr/bin/telegraf &
-/usr/bin/mysql_install_db --datadir=/var/lib/mysql_install_db
-/usr/bin/mysql --user=root --init_file=/init_file & sleep 5
+#!/bin/bash
 
-#Создаем датабазу
-mysql wordpress -u root < wordpress.sql
+rc default
+/etc/init.d/mariadb setup
+rc-service mariadb start
 
-#Поддерживаем контенер рабочим
-tail -f /dev/null
+echo "CREATE DATABASE server;" | mysql
+echo "CREATE USER 'root' WITH PASSWORD 'root';" | mysql
+echo "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'root' WITH GRANT OPTIONS;" | mysql
+echo "FLUSH PRIVILEGES;"
+
+rc-service mariadb stop
+
+/usr/bin/mysqld_safe
+sh

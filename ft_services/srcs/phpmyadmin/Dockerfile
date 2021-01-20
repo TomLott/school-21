@@ -5,7 +5,7 @@ USER root
 RUN adduser -D -g 'www' www
 
 RUN apk add --no-cache wget php7 php7-fpm php7-opcache php7-gd php7-mysqli php7-zlib php7-curl php7-mbstring php7-json php7-session
-RUN apk add --no-cache nginx openrc supervisor
+RUN apk add --no-cache bash nginx openrc supervisor
 RUN rc-update add php-fpm7 default
 
 RUN mkdir -p /var/www/phpmyadmin
@@ -26,4 +26,4 @@ RUN rm -f phpMyAdmin-5.0.4-english.tar.gz
 
 EXPOSE 5000
 
-CMD ["usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
+CMD ["sh", "usr/bin/supervisord", "-c", "/etc/supervisord.conf"]

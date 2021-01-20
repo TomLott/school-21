@@ -15,6 +15,9 @@ RUN mkdir -p /var/run/nginx
 RUN mkdir -p /var/run/php
 RUN touch /var/run/nginx/nginx.pid
 
+COPY start.sh /
+RUN chmod 755 /start.sh
+
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY supervisord.conf /etc/supervisord.conf
 COPY wp-config.php /var/www/wordpress/wp-config.php

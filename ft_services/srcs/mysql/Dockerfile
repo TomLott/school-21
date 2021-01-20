@@ -1,15 +1,15 @@
 FROM alpine:3.12.3
 
-COPY init_file my.cnf telegraf.conf start.sh wordpress.sql ./
+RUN apk add --no-cache mysql mysql-client openrc
 
-RUN apk add --no-cache mysql mysql-client
+COPY start.sh /
+RUN chmod -R 755 /start.sh
 
-RUN wget https://dl.influxdata.com/telegraf/releases/telegraf-1.15.2_linux_amd64.tar.gz
-RUN tar -zxf telegraf-1.15.2_linux_amd64.tar.gz
-RUN  mv telegraf-1.15.2 telegraf
-RUN  rm telegraf-1.15.2_linux_amd64.tar.gz
-RUN cp -r telegraf/* /
+COPY my.cnf /etc/mysql
+
+VOLUME ["/var/lib/"]
+VOLUME ["/sys/fs/cgroup"]
 
 EXPOSE 3306
 
-CMD ./start.sh
+CMD ["sh", "/start.sh"]

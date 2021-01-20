@@ -12,6 +12,6 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 
 COPY vsftpd.conf /etc/vsftpd/vsftpd.conf
 
-EXPOSE 212
+EXPOSE 21
 
 CMD ["sh", "start.sh"]
