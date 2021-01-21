@@ -1,7 +1,7 @@
 FROM alpine:3.12.3
 
 
-COPY setup.sh ./
+COPY start.sh ./
 
 RUN apk add --no-cache influxdb wget supervisor ca-certificates
 
