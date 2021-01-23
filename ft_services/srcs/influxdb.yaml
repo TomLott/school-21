@@ -9,7 +9,7 @@ spec:
   capacity:
     storage: 300Mi
   accessModes:
-    -ReadWriteOnce
+    - ReadWriteOnce
   hostPath:
     path: "/mnt/data_influxdb"
 ---
@@ -21,7 +21,7 @@ spec:
   type: ClusterIP
   selector:
     app: influxdb
-  porst:
+  ports:
     - protocol: TCP
       port: 8086
       targetPort: 8086
@@ -33,7 +33,7 @@ metadata:
 spec:
   storageClassName: fl-volume
   accessModes:
-    -ReadWriteOnce
+    - ReadWriteOnce
   resources:
     requests:
       storage: 300Mi
@@ -51,12 +51,15 @@ spec:
   template:
     metadata:
       labels:
-        app: fl-volume
+        app: influxdb
     spec:
       volumes:
         - name: fl-volume
-          persistentVolimeClaim:
+          persistentVolumeClaim:
             claimName: fl-claim
+        - name: docker-socket
+          hostPath:
+            path: /var/run/docker.sock
       containers:
         - name: influxdb
           image: influxdb_image
@@ -65,4 +68,6 @@ spec:
             - containerPort: 8086
           volumeMounts:
             - name: fl-volume
-              mountPath: /var/lib/
+              mountPath: /var/lib/influxdb
+            - name: docker-socket
+              mountPath: /var/run/docker.sock
