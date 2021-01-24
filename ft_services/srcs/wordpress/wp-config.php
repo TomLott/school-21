@@ -20,13 +20,13 @@
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */
-define( 'DB_NAME', 'wordpress' );
+define( 'DB_NAME', 'mydb' );
 
 /** MySQL database username */
-define( 'DB_USER', 'wp_admin' );
+define( 'DB_USER', 'admin' );
 
 /** MySQL database password */
-define( 'DB_PASSWORD', '1111' );
+define( 'DB_PASSWORD', 'admin' );
 
 /** MySQL hostname */
 define( 'DB_HOST', 'mysql-svc:3306' );
@@ -38,6 +38,8 @@ define( 'DB_CHARSET', 'utf8' );
 define( 'DB_COLLATE', '' );
 
 #define( 'FS_METHOD', 'direct');
+
+define( 'CONCATENATE_SCRIPTS', false);
 
 /**#@+
  * Authentication Unique Keys and Salts.

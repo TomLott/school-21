@@ -4,12 +4,14 @@ rc default
 /etc/init.d/mariadb setup
 rc-service mariadb start
 
-echo "CREATE DATABASE server;" | mysql
-echo "CREATE USER 'root' WITH PASSWORD 'root';" | mysql
-echo "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'root' WITH GRANT OPTIONS;" | mysql
-echo "FLUSH PRIVILEGES;"
 
+echo "CREATE DATABASE mydb;" | mysql
+echo "GRANT ALL PRIVILEGES ON mydb.* TO admin@'%' IDENTIFIED BY 'admin' WITH GRANT OPTION;" | mysql
+echo "FLUSH PRIVILEGES;" | mysql
+
+mysql mydb < mydb.sql
 rc-service mariadb stop
+#https://www.opennet.ru/man.shtml?topic=rc-service&category=1&russian=0
 
 /usr/bin/mysqld_safe
 sh
