@@ -1,3 +1,3 @@
-docker build -t ft_server .
+docker build -t "name" "dockerfile src"
 
-docker run ft_server --it p 80:80 p 443:443
+docker run --rm -it -p 80:80 -p 443:443 "name"
